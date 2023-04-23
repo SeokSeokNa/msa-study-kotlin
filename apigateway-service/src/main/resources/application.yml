@@ -20,12 +20,16 @@ spring:
             preLogger: true
             postLogger: true
       routes:
+        - id: user-service
+          uri: lb://USER-SERVICE/ #discovery service에 등록된 값을 가져다가 사용하면됨
+          predicates:
+              - Path=/user-service/** # user-service 라고 호출한것만 전달해주나 해당하는 서비스의 엔드포인트 주소가 /user-service/** 형태여야한다! 안그러면 404 error 발생
         - id: first-service
           uri: lb://MY-FIRST-SERVICE/
           predicates: #???
             - Path=/first-service/** # path ??? first-service? ???? ?? ???? ??? ??
           filters: #?? ??
-#            - AddRequestHeader=first-request, first-request-header2 # ???=??? , ???
+#            - AddRequestHeader=first-request, first-request-header2 # 요청ㅎ[더=헤더명 , 헤더값
 #            - AddResponseHeader=first-response, first-response-header2
             - CustomFilter
         - id: first-service
@@ -41,3 +45,4 @@ spring:
                 baseMessage: Hi, there
                 preLogger: true
                 postLogger: true
+
