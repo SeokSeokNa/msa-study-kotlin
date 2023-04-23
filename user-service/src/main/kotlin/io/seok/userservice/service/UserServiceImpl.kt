@@ -3,8 +3,11 @@ package io.seok.userservice.service
 import io.seok.userservice.domain.UserEntity
 import io.seok.userservice.dto.UserDto
 import io.seok.userservice.repository.UserRepository
+import io.seok.userservice.vo.ResponseOrder
+import io.seok.userservice.vo.ResponseUser
 import org.modelmapper.ModelMapper
 import org.modelmapper.convention.MatchingStrategies
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import java.util.*
@@ -26,5 +29,24 @@ class UserServiceImpl(
         userRepository.save(userEntity)
 
         return userDto
+    }
+
+    override fun getUserByUserId(userId: String): ResponseUser {
+        val userEntity: UserEntity =
+            userRepository.findByUserId(userId) ?: throw UsernameNotFoundException("User not found")
+
+        val userDto = UserDto.convertUserDto(userEntity)
+
+        val orders: List<ResponseOrder> = ArrayList()
+        userDto.orders = orders
+
+
+        return ResponseUser.createResponseUserFromUserDto(userDto)
+
+    }
+
+    override fun getUserByAll(): List<ResponseUser> {
+        return userRepository.findAll()
+            .map { userEntity ->  ResponseUser.createResponseUserFromEntity(userEntity)}
     }
 }

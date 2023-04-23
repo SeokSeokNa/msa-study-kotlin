@@ -2,6 +2,7 @@ package io.seok.userservice.dto
 
 import io.seok.userservice.domain.UserEntity
 import io.seok.userservice.vo.RequestUser
+import io.seok.userservice.vo.ResponseOrder
 import java.time.LocalDate
 import java.util.Date
 
@@ -12,7 +13,8 @@ data class UserDto(
     var userId: String,
     var createdAt: Date,
 
-    var encryptedPwd: String
+    var encryptedPwd: String,
+    var orders: List<ResponseOrder>
 ) {
 
     companion object {
@@ -23,7 +25,20 @@ data class UserDto(
                 pwd = requestUser.pwd!!,
                 "",
                 Date(),
-                ""
+                "",
+                ArrayList()
+            )
+        }
+
+        fun convertUserDto(userEntity: UserEntity): UserDto {
+            return UserDto(
+                email = userEntity.email,
+                name = userEntity.name,
+                "",
+                userId = userEntity.userId,
+                Date(),
+                encryptedPwd = userEntity.encryptedPwd,
+                ArrayList()
             )
         }
     }
