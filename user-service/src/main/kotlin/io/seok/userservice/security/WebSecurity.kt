@@ -29,10 +29,12 @@ class WebSecurity(
             .authorizeHttpRequests()
 //            .requestMatchers("/users/**").permitAll()
 //            .requestMatchers(PathRequest.toH2Console()).permitAll()
-            .requestMatchers("/**").authenticated()
+            .requestMatchers("/users" , "/login").permitAll()
+            .anyRequest()
+            .authenticated()
             .and()
             .userDetailsService(userService)
-            .addFilter(AuthenticationFilter(authenticationManager(authenticationConfiguration) , ObjectMapper()))
+            .addFilter(AuthenticationFilter(authenticationManager(authenticationConfiguration)))
             .build();
     }
 
