@@ -7,6 +7,8 @@ import io.seok.userservice.vo.ResponseOrder
 import io.seok.userservice.vo.ResponseUser
 import org.modelmapper.ModelMapper
 import org.modelmapper.convention.MatchingStrategies
+import org.springframework.security.core.userdetails.User
+import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -47,6 +49,16 @@ class UserServiceImpl(
 
     override fun getUserByAll(): List<ResponseUser> {
         return userRepository.findAll()
-            .map { userEntity ->  ResponseUser.createResponseUserFromEntity(userEntity)}
+            .map { userEntity -> ResponseUser.createResponseUserFromEntity(userEntity) }
+    }
+
+    override fun loadUserByUsername(username: String): UserDetails {
+        val userEntity: UserEntity = userRepository.findByEmail(username) ?: throw UsernameNotFoundException("")
+
+        return User(
+            userEntity.email, userEntity.encryptedPwd,
+            true, true, true, true,
+            listOf()
+        )
     }
 }
