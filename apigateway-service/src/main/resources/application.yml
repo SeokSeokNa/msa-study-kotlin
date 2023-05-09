@@ -20,10 +20,38 @@ spring:
             preLogger: true
             postLogger: true
       routes:
+#        - id: user-service
+#          uri: lb://USER-SERVICE/ #discovery service에 등록된 값을 가져다가 사용하면됨
+#          predicates:
+#              - Path=/user-service/** # user-service 라고 호출한것만 전달해주나 해당하는 서비스의 엔드포인트 주소가 /user-service/** 형태여야한다! 안그러면 404 error 발생
         - id: user-service
           uri: lb://USER-SERVICE/ #discovery service에 등록된 값을 가져다가 사용하면됨
           predicates:
-              - Path=/user-service/** # user-service 라고 호출한것만 전달해주나 해당하는 서비스의 엔드포인트 주소가 /user-service/** 형태여야한다! 안그러면 404 error 발생
+            - Path=/user-service/login
+            - Method=POST # post 요청시에만 동작
+          filters:
+            - RemoveRequestHeader=Cookie # post 전송은 매번 새로운 값으로 나타내기 위해 request header를 초기화
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment} # 사용자가 /user-service/** 형태로 요청시 /** 형태로 변환하여 USER-SERVICE lb에 전송하게됨
+        - id: user-service
+          uri: lb://USER-SERVICE/
+          predicates:
+            - Path=/user-service/users
+            - Method=POST # post 요청시에만 동작
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+        - id: user-service
+          uri: lb://USER-SERVICE/
+          predicates:
+            - Path=/user-service/login
+            - Method=GET # GET 요청시에만 동작
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+
+
+
+
         - id: catalog-service
           uri: lb://CATALOG-SERVICE/
           predicates:
@@ -34,9 +62,9 @@ spring:
             - Path=/order-service/**
         - id: first-service
           uri: lb://MY-FIRST-SERVICE/
-          predicates: #???
-            - Path=/first-service/** # path ??? first-service? ???? ?? ???? ??? ??
-          filters: #?? ??
+          predicates: #url pattern 적용
+            - Path=/first-service/** # path 가 first-service 인 경우 해당 service로 전송
+          filters: #필터 추가
 #            - AddRequestHeader=first-request, first-request-header2 # 요청ㅎ[더=헤더명 , 헤더값
 #            - AddResponseHeader=first-response, first-response-header2
             - CustomFilter
