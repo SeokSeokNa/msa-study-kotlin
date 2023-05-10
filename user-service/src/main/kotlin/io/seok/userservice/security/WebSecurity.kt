@@ -1,9 +1,9 @@
 package io.seok.userservice.security
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import io.seok.userservice.service.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
@@ -29,9 +29,7 @@ class WebSecurity(
             .authorizeHttpRequests()
 //            .requestMatchers("/users/**").permitAll()
 //            .requestMatchers(PathRequest.toH2Console()).permitAll()
-            .requestMatchers("/users" , "/login").permitAll()
-            .anyRequest()
-            .authenticated()
+            .requestMatchers("/**").permitAll()
             .and()
             .userDetailsService(userService)
             .addFilter(AuthenticationFilter(authenticationManager(authenticationConfiguration)))
