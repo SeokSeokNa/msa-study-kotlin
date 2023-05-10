@@ -3,6 +3,7 @@ package io.seok.userservice.security
 import io.seok.userservice.service.UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
@@ -17,7 +18,8 @@ import org.springframework.security.web.SecurityFilterChain
 class WebSecurity(
     private val authenticationConfiguration: AuthenticationConfiguration,
     private val passwordEncoder: BCryptPasswordEncoder, //security 5.7이상 버전부터는 BCryptPasswordEncoder가 bean으로 어딘가 정의만 되어있으면 자동적용된다.(따로 설정하지 않아도된다)
-    private val userService: UserService
+    private val userService: UserService,
+    private val env: Environment
 ) {
 
     @Bean
@@ -32,7 +34,7 @@ class WebSecurity(
             .requestMatchers("/**").permitAll()
             .and()
             .userDetailsService(userService)
-            .addFilter(AuthenticationFilter(authenticationManager(authenticationConfiguration)))
+            .addFilter(AuthenticationFilter(authenticationManager(authenticationConfiguration),userService,env))
             .build();
     }
 
@@ -40,5 +42,7 @@ class WebSecurity(
     fun authenticationManager(authenticationConfiguration: AuthenticationConfiguration): AuthenticationManager {
         return authenticationConfiguration.authenticationManager
     }
+
+
 
 }

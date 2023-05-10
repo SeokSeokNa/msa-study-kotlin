@@ -34,7 +34,7 @@ data class UserDto(
             return UserDto(
                 email = userEntity.email,
                 name = userEntity.name,
-                "",
+                pwd = userEntity.encryptedPwd,
                 userId = userEntity.userId,
                 Date(),
                 encryptedPwd = userEntity.encryptedPwd,

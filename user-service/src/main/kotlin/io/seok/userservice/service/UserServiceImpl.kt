@@ -5,8 +5,6 @@ import io.seok.userservice.dto.UserDto
 import io.seok.userservice.repository.UserRepository
 import io.seok.userservice.vo.ResponseOrder
 import io.seok.userservice.vo.ResponseUser
-import org.modelmapper.ModelMapper
-import org.modelmapper.convention.MatchingStrategies
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
@@ -45,6 +43,11 @@ class UserServiceImpl(
 
         return ResponseUser.createResponseUserFromUserDto(userDto)
 
+    }
+
+    override fun getUserDetailsByEmail(email: String): UserDto {
+        val userEntity = userRepository.findByEmail(email) ?: throw UsernameNotFoundException(email)
+        return UserDto.convertUserDto(userEntity)
     }
 
     override fun getUserByAll(): List<ResponseUser> {
