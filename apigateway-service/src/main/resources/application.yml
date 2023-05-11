@@ -8,6 +8,10 @@ eureka:
     service-url:
       defaultZone: http://localhost:8761/eureka
 
+
+token:
+  secret: 1d93a5f2017760fc731177675fbce0e57c057b522809f75150a27e0ac17106867efaade066ec8ea8bccb52ebd85c7a9e9ea5f93c7c24845f7639b08a323693b4
+
 spring:
   application:
     name: apigateway-service
@@ -43,11 +47,12 @@ spring:
         - id: user-service
           uri: lb://USER-SERVICE/
           predicates:
-            - Path=/user-service/login
+            - Path=/user-service/**
             - Method=GET # GET 요청시에만 동작
           filters:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
+            - AuthorizationHeaderFilter # jwt 인증 필터 추가
 
 
 
