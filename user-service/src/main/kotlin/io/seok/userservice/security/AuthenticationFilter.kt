@@ -1,5 +1,8 @@
 package io.seok.userservice.security
 
+import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import io.seok.userservice.dto.UserDto
 import io.seok.userservice.service.UserService
 import io.seok.userservice.util.mapperUtil
@@ -16,6 +19,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.io.IOException
+import java.nio.charset.StandardCharsets
+import java.security.Key
+import java.util.*
+import kotlin.coroutines.ContinuationInterceptor
 
 class AuthenticationFilter(
     authenticationManager: AuthenticationManager?,
@@ -44,13 +51,27 @@ class AuthenticationFilter(
     }
 
     override fun successfulAuthentication(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
         chain: FilterChain?,
         authResult: Authentication?
     ) {
 //        super.successfulAuthentication(request, response, chain, authResult)
         val username = (authResult?.principal as User).username
         val userDto: UserDto = userService.getUserDetailsByEmail(username)
+
+        val key: Key  = Keys.hmacShaKeyFor(env.getProperty("token.secret")!!.toByteArray(StandardCharsets.UTF_8))
+
+        val token = Jwts.builder()
+            .setSubject(userDto.userId)
+            .setExpiration(Date(System.currentTimeMillis()
+                + env.getProperty("token.expiration_time")!!.toLong()
+            ))
+            .signWith(key , SignatureAlgorithm.HS256)
+            .compact()
+
+        response.addHeader("token", token)
+        response.addHeader("userId", userDto.userId)
+
     }
 }
