@@ -1,5 +1,5 @@
 server:
-  port: 8888 # ?? ???? ??? ?? 8888 ??? ????? ????? ???? ??
+  port: 8888 # 기본 8888 포트로 동작 하지만 명시적으로 표기
 
 spring:
   application:
@@ -9,4 +9,4 @@ spring:
       server:
         git:
           uri: file:///C:/workspace/Study/msa-study-kotlin-config #window
-          default-label: master #?? ???
+          default-label: master #브랜치 설정
