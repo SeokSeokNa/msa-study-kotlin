@@ -39,6 +39,13 @@ logging:
   level:
     io.seok.userservice: DEBUG
 
+# actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh , health , beans
+
 #token:
 #  expiration_time: 86400000  # 60*1000(1분) * 60(60분) * 24(1일)(토큰 만료 시간은 1일)
 #  secret: 1d93a5f2017760fc731177675fbce0e57c057b522809f75150a27e0ac17106867efaade066ec8ea8bccb52ebd85c7a9e9ea5f93c7c24845f7639b08a323693b4

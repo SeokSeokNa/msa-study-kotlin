@@ -31,6 +31,7 @@ class WebSecurity(
             .authorizeHttpRequests()
 //            .requestMatchers("/users/**").permitAll()
 //            .requestMatchers(PathRequest.toH2Console()).permitAll()
+            .requestMatchers("/actuator/**").permitAll() //서버 상태 값을 체크할 수 있는 actuator/** 패턴은  모두 통과시키도록 설정
             .requestMatchers("/**").permitAll()
             .and()
             .userDetailsService(userService)
