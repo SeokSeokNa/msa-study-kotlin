@@ -55,8 +55,6 @@ dependencies {
     runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
     // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-config
     implementation 'org.springframework.cloud:spring-cloud-starter-config:4.0.2'
-// https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bootstrap
-    implementation 'org.springframework.cloud:spring-cloud-starter-bootstrap:4.0.2'
 
 
 

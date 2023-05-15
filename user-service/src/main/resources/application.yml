@@ -5,6 +5,14 @@ spring:
   application:
     name: user-service
 
+  # 스프링 버전이 올라가면서 bootstrap.yml 파일을 더이상 사용하지 않고 이런식으로 config-server 와 통신함
+  cloud:
+    config:
+      name: ecommerce # config 파일명
+  config:
+    import: optional:configserver:http://localhost:8888
+
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/mydb
@@ -31,6 +39,6 @@ logging:
   level:
     io.seok.userservice: DEBUG
 
-token:
-  expiration_time: 86400000  # 60*1000(1분) * 60(60분) * 24(1일)(토큰 만료 시간은 1일)
-  secret: 1d93a5f2017760fc731177675fbce0e57c057b522809f75150a27e0ac17106867efaade066ec8ea8bccb52ebd85c7a9e9ea5f93c7c24845f7639b08a323693b4
+#token:
+#  expiration_time: 86400000  # 60*1000(1분) * 60(60분) * 24(1일)(토큰 만료 시간은 1일)
+#  secret: 1d93a5f2017760fc731177675fbce0e57c057b522809f75150a27e0ac17106867efaade066ec8ea8bccb52ebd85c7a9e9ea5f93c7c24845f7639b08a323693b4
