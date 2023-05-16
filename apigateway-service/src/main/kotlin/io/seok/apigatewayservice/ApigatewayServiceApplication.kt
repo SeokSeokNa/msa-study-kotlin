@@ -1,7 +1,10 @@
 package io.seok.apigatewayservice
 
+import org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository
+import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.Bean
 
 /*
     기존 nexfix zuul 에서는 동기방식으로 동작했으나
@@ -12,4 +15,9 @@ class ApigatewayServiceApplication
 
 fun main(args: Array<String>) {
     runApplication<ApigatewayServiceApplication>(*args)
+}
+
+@Bean
+fun httpTraceRepository(): HttpExchangeRepository {
+    return InMemoryHttpExchangeRepository()
 }

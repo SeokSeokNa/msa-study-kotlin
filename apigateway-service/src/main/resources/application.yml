@@ -15,7 +15,11 @@ token:
 spring:
   application:
     name: apigateway-service
+  config:
+    import: optional:configserver:http://localhost:8888
   cloud:
+    config:
+      name: ecommerce
     gateway:
       default-filters:
         - name: GlobalFilter
@@ -53,6 +57,14 @@ spring:
             - RemoveRequestHeader=Cookie
             - RewritePath=/user-service/(?<segment>.*), /$\{segment}
             - AuthorizationHeaderFilter # jwt 인증 필터 추가
+        - id: user-service
+          uri: lb://USER-SERVICE/
+          predicates:
+            - Path=/user-service/actuator/** # actuator 관련 엔드포인트 포워딩하기
+            - Method=GET , POST
+          filters:
+            - RemoveRequestHeader=Cookie
+            - RewritePath=/user-service/(?<segment>.*), /$\{segment}
 
 
 
@@ -87,3 +99,9 @@ spring:
                 preLogger: true
                 postLogger: true
 
+# actuator 설정
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh , health , beans, httpexchanges #httptrace 를 사용하려면 HttpExchangeRepository bean 으로 등록하여 사용해야 한다.
