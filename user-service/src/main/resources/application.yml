@@ -11,6 +11,8 @@ spring:
       name: ecommerce # config 파일명
   config:
     import: optional:configserver:http://localhost:8888
+  profiles:
+    active: dev #config-server에 있는 설정 파일을 profile별로 불러올 수 있다( 현재 설정으로는 ecommerce-dev.yml 파일을 불러오게된다.)
 
 
   datasource:
