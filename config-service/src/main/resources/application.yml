@@ -8,5 +8,8 @@ spring:
     config:
       server:
         git:
-          uri: file:///C:/workspace/Study/msa-study-kotlin-config #window
-          default-label: master #브랜치 설정
+          uri: https://github.com/SeokSeokNa/spring-cloud-config
+#          username: [github username] #username 과 password는 git repository가 private 일때만 사용
+#          password: [github token or password]
+#          uri: file:///C:/workspace/Study/msa-study-kotlin-config #window
+#          default-label: master #브랜치 설정
