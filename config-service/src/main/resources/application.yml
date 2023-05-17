@@ -4,9 +4,14 @@ server:
 spring:
   application:
     name: config-service
+  profiles:
+    active: native #profile을 native로 설정했기에 밑에 git-uri 설정은 무시됨(만약 profile설정을 따로 안했다면 git에 정보를 디폴트로 읽게 되어있음)
   cloud:
     config:
       server:
+        native:
+          search-locations: file:///${user.home}/native-local-repo #window
+#          search-locations: file://${user.home}/native-local-repo #mac
         git:
           uri: https://github.com/SeokSeokNa/spring-cloud-config
 #          username: [github username] #username 과 password는 git repository가 private 일때만 사용
