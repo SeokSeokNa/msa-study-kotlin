@@ -20,6 +20,12 @@ extra["springCloudVersion"] = "2022.0.2"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.springframework.cloud:spring-cloud-config-server")
+    // https://mvnrepository.com/artifact/org.springframework.cloud/spring-cloud-starter-bus-amqp
+    implementation("org.springframework.cloud:spring-cloud-starter-bus-amqp:4.0.1")
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-actuator
+    implementation("org.springframework.boot:spring-boot-starter-actuator:3.0.6")
+
+
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
 

@@ -4,6 +4,11 @@ server:
 spring:
   application:
     name: config-service
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
   profiles:
     active: native #profile을 native로 설정했기에 밑에 git-uri 설정은 무시됨(만약 profile설정을 따로 안했다면 git에 정보를 디폴트로 읽게 되어있음)
   cloud:
@@ -18,3 +23,9 @@ spring:
 #          password: [github token or password]
 #          uri: file:///C:/workspace/Study/msa-study-kotlin-config #window
 #          default-label: master #브랜치 설정
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, busrefresh
