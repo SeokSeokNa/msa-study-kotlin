@@ -1,6 +1,12 @@
 server:
   port: 8888 # 기본 8888 포트로 동작 하지만 명시적으로 표기
 
+encrypt:
+  key-store:
+    location: file:///${user.home}/apiEncryptionKey.jks
+    password: test1234
+    alias: apiEncryptionKey
+
 spring:
   application:
     name: config-service
