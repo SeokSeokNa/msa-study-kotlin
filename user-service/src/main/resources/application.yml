@@ -13,7 +13,8 @@ spring:
   cloud:
     config:
 #      name: ecommerce # config 파일명
-      name: config-server # configServer의 어플리케이션 name을 명시하게되면 application.yml 파일을 읽어오게함
+#      name: config-server # configServer의 어플리케이션 name을 명시하게되면 application.yml 파일을 읽어오게함
+      name: user-service
   config:
     import: optional:configserver:http://localhost:8888
 #  profiles:
