@@ -35,7 +35,7 @@ class OrderController(
     }
 
     @GetMapping("/{userId}/orders")
-    fun createOrder(@PathVariable("userId") userId: String): ResponseEntity<List<ResponseOrder>> {
+    fun getOrders(@PathVariable("userId") userId: String): ResponseEntity<List<ResponseOrder>> {
         val ordersByUserId = orderService.getOrdersByUserId(userId)
         return ResponseEntity.status(HttpStatus.OK).body(ordersByUserId)
     }
