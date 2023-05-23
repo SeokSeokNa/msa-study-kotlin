@@ -1,5 +1,6 @@
 package io.seok.userservice.service
 
+import io.seok.userservice.client.OrderServiceClient
 import io.seok.userservice.domain.UserEntity
 import io.seok.userservice.dto.UserDto
 import io.seok.userservice.repository.UserRepository
@@ -22,7 +23,8 @@ class UserServiceImpl(
     private val userRepository: UserRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val restTemplate: RestTemplate,
-    private val env: Environment
+    private val env: Environment,
+    private val orderServiceClient: OrderServiceClient
 ) : UserService {
 
 
@@ -48,12 +50,16 @@ class UserServiceImpl(
 //        val orderList: List<ResponseOrder> = ArrayList()
 
         //2. RestTemplate로 orderService와 통신하여 리스트 넘기기
-        val orderUrl = String.format(env.getProperty("order_service.url")!!,userId) //user-service.yml 환경설정 파일에서 가져온 url 정보에 path variable 데이터로 userId가 필요하기에 string.format을 사용
-        val orderListResponse = restTemplate.exchange(
-            orderUrl,
-            HttpMethod.GET,
-            null,
-            object : ParameterizedTypeReference<List<ResponseOrder>>() {})
+//        val orderUrl = String.format(env.getProperty("order_service.url")!!,userId) //user-service.yml 환경설정 파일에서 가져온 url 정보에 path variable 데이터로 userId가 필요하기에 string.format을 사용
+//        val orderListResponse = restTemplate.exchange(
+//            orderUrl,
+//            HttpMethod.GET,
+//            null,
+//            object : ParameterizedTypeReference<List<ResponseOrder>>() {})
+
+        //3. FeignClient 를 이용한 OrderService 와 통신하여 리스트 넘기기
+        val orderListResponse = orderServiceClient.getOrders(userId)
+
         val orderList = orderListResponse.body ?: ArrayList()
         userDto.orders = orderList
 
