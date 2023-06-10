@@ -68,13 +68,16 @@ class UserServiceImpl(
 //        userDto.orders = orderList
 
         //4. FeignClient Exception Handling
-        try {
-            val orderList = orderServiceClient.getOrders(userId).body ?: ArrayList()
-            userDto.orders = orderList
-        } catch (e: FeignException) {
-            logger.error(e.message)
-        }
+//        try {
+//            val orderList = orderServiceClient.getOrders(userId).body ?: ArrayList()
+//            userDto.orders = orderList
+//        } catch (e: FeignException) {
+//            logger.error(e.message)
+//        }
 
+        //5. FeignClient Error Decoder Exception Handlling
+        val orderList = orderServiceClient.getOrders(userId)
+        userDto.orders = orderList.body ?: java.util.ArrayList()
 
 
         return ResponseUser.createResponseUserFromUserDto(userDto)

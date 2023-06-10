@@ -1,6 +1,7 @@
 package io.seok.userservice
 
 import feign.Logger
+import io.seok.userservice.error.FeignErrorDecoder
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
@@ -29,6 +30,11 @@ class UserServiceApplication {
     @Bean //Feign Client 를 이용한 통신 사용시 로그를 출력하기 위한 Bean
     fun feignLoggerLevel(): Logger.Level {
         return Logger.Level.FULL
+    }
+
+    @Bean// Feign client Exception 처리를 위한 클래스 bean 등록
+    fun getFeignErrorDecoder(): FeignErrorDecoder {
+        return FeignErrorDecoder()
     }
 }
 
