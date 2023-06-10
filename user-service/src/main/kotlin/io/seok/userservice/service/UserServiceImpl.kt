@@ -1,11 +1,14 @@
 package io.seok.userservice.service
 
+import feign.FeignException
 import io.seok.userservice.client.OrderServiceClient
 import io.seok.userservice.domain.UserEntity
 import io.seok.userservice.dto.UserDto
 import io.seok.userservice.repository.UserRepository
 import io.seok.userservice.vo.ResponseOrder
 import io.seok.userservice.vo.ResponseUser
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.core.env.Environment
 import org.springframework.http.HttpMethod
@@ -24,9 +27,10 @@ class UserServiceImpl(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val restTemplate: RestTemplate,
     private val env: Environment,
-    private val orderServiceClient: OrderServiceClient
+    private val orderServiceClient: OrderServiceClient,
 ) : UserService {
 
+    val logger: Logger = LoggerFactory.getLogger(UserServiceImpl::class.java)
 
     override fun createUser(userDto: UserDto): UserDto {
         userDto.userId = UUID.randomUUID().toString()
@@ -58,10 +62,20 @@ class UserServiceImpl(
 //            object : ParameterizedTypeReference<List<ResponseOrder>>() {})
 
         //3. FeignClient 를 이용한 OrderService 와 통신하여 리스트 넘기기
-        val orderListResponse = orderServiceClient.getOrders(userId)
+//        val orderListResponse = orderServiceClient.getOrders(userId)
 
-        val orderList = orderListResponse.body ?: ArrayList()
-        userDto.orders = orderList
+//        val orderList = orderListResponse.body ?: ArrayList()
+//        userDto.orders = orderList
+
+        //4. FeignClient Exception Handling
+        try {
+            val orderList = orderServiceClient.getOrders(userId).body ?: ArrayList()
+            userDto.orders = orderList
+        } catch (e: FeignException) {
+            logger.error(e.message)
+        }
+
+
 
         return ResponseUser.createResponseUserFromUserDto(userDto)
 

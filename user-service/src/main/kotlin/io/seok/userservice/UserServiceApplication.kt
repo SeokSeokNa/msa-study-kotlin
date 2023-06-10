@@ -1,5 +1,6 @@
 package io.seok.userservice
 
+import feign.Logger
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient
@@ -23,6 +24,11 @@ class UserServiceApplication {
     @LoadBalanced //다른 마이크로 서비스들과 통신시 IP주소체계(127.0.0.1:8000)를 사용하지 않고 마이크로 서비스 name 체계로 url을 구성하고 싶을때 사용(http://order-service/orders 이런식으로)
     fun getRestTemplate(): RestTemplate {
         return RestTemplate()
+    }
+
+    @Bean //Feign Client 를 이용한 통신 사용시 로그를 출력하기 위한 Bean
+    fun feignLoggerLevel(): Logger.Level {
+        return Logger.Level.FULL
     }
 }
 

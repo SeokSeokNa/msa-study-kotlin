@@ -45,7 +45,7 @@ greeting:
 
 logging:
   level:
-    io.seok.userservice: DEBUG
+    io.seok.userservice.client: DEBUG
 
 # actuator 설정
 management:
