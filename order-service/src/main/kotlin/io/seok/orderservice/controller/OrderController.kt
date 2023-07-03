@@ -2,6 +2,7 @@ package io.seok.orderservice.controller
 
 import io.seok.orderservice.dto.OrderDto
 import io.seok.orderservice.dto.RequestOrder
+import io.seok.orderservice.messagequeue.KafkaProducer
 import io.seok.orderservice.service.OrderService
 import io.seok.orderservice.vo.ResponseOrder
 import org.springframework.core.env.Environment
@@ -13,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/order-service")
 class OrderController(
     private val env: Environment,
-    private val orderService: OrderService
+    private val orderService: OrderService,
+    private val kafkaProducer: KafkaProducer
 ) {
 
     @GetMapping("/health_check")
@@ -30,6 +32,9 @@ class OrderController(
         val createOrder = orderService.createOrder(orderDto)
 
         val responseUser = ResponseOrder.createResponseOrder(createOrder)
+
+        /* send this ordfer to the kafka */
+        kafkaProducer.send("example-catalog-topic" , createOrder)
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUser)
     }
