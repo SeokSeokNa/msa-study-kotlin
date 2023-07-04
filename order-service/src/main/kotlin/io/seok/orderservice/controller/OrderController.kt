@@ -3,6 +3,7 @@ package io.seok.orderservice.controller
 import io.seok.orderservice.dto.OrderDto
 import io.seok.orderservice.dto.RequestOrder
 import io.seok.orderservice.messagequeue.KafkaProducer
+import io.seok.orderservice.messagequeue.OrderProducer
 import io.seok.orderservice.service.OrderService
 import io.seok.orderservice.vo.ResponseOrder
 import org.springframework.core.env.Environment
@@ -15,7 +16,8 @@ import org.springframework.web.bind.annotation.*
 class OrderController(
     private val env: Environment,
     private val orderService: OrderService,
-    private val kafkaProducer: KafkaProducer
+    private val kafkaProducer: KafkaProducer,
+    private val orderProducer: OrderProducer
 ) {
 
     @GetMapping("/health_check")
@@ -29,14 +31,18 @@ class OrderController(
 
         val orderDto = OrderDto.createOrderDto(orderDetails)
         orderDto.userId = userId
-        val createOrder = orderService.createOrder(orderDto)
 
-        val responseUser = ResponseOrder.createResponseOrder(createOrder)
+        /* 기존 JPA 방식*/
+//        val createOrder = orderService.createOrder(orderDto)
+//        val responseUser = ResponseOrder.createResponseOrder(createOrder)
 
-        /* send this ordfer to the kafka */
-        kafkaProducer.send("example-catalog-topic" , createOrder)
+        /* send this order to the kafka */
+        kafkaProducer.send("example-catalog-topic" , orderDto)
+        orderProducer.send("orders" , orderDto)
 
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseUser)
+        val responseOrder = ResponseOrder.createResponseOrder(orderDto)
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(responseOrder)
     }
 
     @GetMapping("/{userId}/orders")
