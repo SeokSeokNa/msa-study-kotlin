@@ -76,12 +76,14 @@ class UserServiceImpl(
 
         //5. FeignClient Error Decoder Exception Handlling
 //        val orderList = orderServiceClient.getOrders(userId)
+//        userDto.orders = orderList.body ?: java.util.ArrayList()
 
         //6. CircuitBreaker 이용
         val circuitBreaker = circuitBreakerFactory.create("circuitbreaker")
-        circuitBreaker.run({ orderServiceClient.getOrders(userId) }, { throwable -> ArrayList<ResponseOrder>() })
+        val orderList:List<ResponseOrder> = circuitBreaker.run({ orderServiceClient.getOrders(userId).body }, { throwable -> listOf<ResponseOrder>() })
 
-//        userDto.orders = orderList.body ?: java.util.ArrayList()
+
+        userDto.orders = orderList
 
 
         return ResponseUser.createResponseUserFromUserDto(userDto)
