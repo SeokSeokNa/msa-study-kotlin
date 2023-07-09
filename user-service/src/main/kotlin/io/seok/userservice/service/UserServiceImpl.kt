@@ -18,6 +18,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
 import java.util.*
+import kotlin.math.log
 
 @Service
 class UserServiceImpl(
@@ -79,8 +80,9 @@ class UserServiceImpl(
 //        userDto.orders = orderList.body ?: java.util.ArrayList()
 
         //6. CircuitBreaker 이용
+        logger.info("Before call orders microservice")
         val circuitBreaker = circuitBreakerFactory.create("circuitbreaker")
-        val orderList:List<ResponseOrder> = circuitBreaker.run({ orderServiceClient.getOrders(userId).body }, { throwable -> listOf<ResponseOrder>() })
+        val orderList:List<ResponseOrder> = circuitBreaker.run({ orderServiceClient.getOrders(userId).body }, { throwable -> listOf() })
 
 
         userDto.orders = orderList

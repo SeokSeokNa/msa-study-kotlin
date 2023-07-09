@@ -4,6 +4,7 @@ server:
 spring:
   application:
     name: user-service
+
   rabbitmq:
     host: 127.0.0.1
     port: 5672
@@ -12,13 +13,13 @@ spring:
   # 스프링 버전이 올라가면서 bootstrap.yml 파일을 더이상 사용하지 않고 이런식으로 config-server 와 통신함
   cloud:
     config:
-#      name: ecommerce # config 파일명
-#      name: config-server # configServer의 어플리케이션 name을 명시하게되면 application.yml 파일을 읽어오게함
+      #      name: ecommerce # config 파일명
+      #      name: config-server # configServer의 어플리케이션 name을 명시하게되면 application.yml 파일을 읽어오게함
       name: user-service
   config:
     import: optional:configserver:http://localhost:8888
-#  profiles:
-#    active: dev #config-server에 있는 설정 파일을 profile별로 불러올 수 있다( 현재 설정으로는 ecommerce-dev.yml 파일을 불러오게된다.)
+  #  profiles:
+  #    active: dev #config-server에 있는 설정 파일을 profile별로 불러올 수 있다( 현재 설정으로는 ecommerce-dev.yml 파일을 불러오게된다.)
 
 
   datasource:
@@ -32,7 +33,7 @@ spring:
 
 eureka:
   instance:
-#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    #    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
     instance-id: ${spring.cloud.client.ip-address}:${spring.application.instance_id:${random.value}}
   client:
     register-with-eureka: true
@@ -46,9 +47,18 @@ greeting:
 logging:
   level:
     io.seok.userservice.client: DEBUG
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
 
 # actuator 설정
 management:
+  zipkin:
+    tracing:
+      endpoint: http://127.0.0.1:9411/api/v2/spans
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0 # zipkin 서버로 어느정보 비율로 추적 데이터를 전송할건지(1.0 이면 모두 전송한다는 뜻)
   endpoints:
     web:
       exposure:
