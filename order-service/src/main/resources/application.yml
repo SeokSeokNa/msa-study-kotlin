@@ -5,6 +5,12 @@ spring:
   application:
     name: order-service
 
+  rabbitmq:
+    host: 127.0.0.1
+    port: 5672
+    username: admin
+    password: admin
+
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
     url: jdbc:mariadb://localhost:3306/mydb
@@ -38,6 +44,10 @@ management:
     enabled: true
     sampling:
       probability: 1.0 # zipkin 서버로 어느정보 비율로 추적 데이터를 전송할건지(1.0 이면 모두 전송한다는 뜻)
+  endpoint:
+    web:
+      exposure:
+        include: health , httpexchanges , info , metrics, prometheus
 
 
 
