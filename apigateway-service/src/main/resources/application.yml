@@ -108,4 +108,4 @@ management:
   endpoints:
     web:
       exposure:
-        include: refresh , health , beans, busrefresh ,httpexchanges #httptrace 를 사용하려면 HttpExchangeRepository 객체를 bean 으로 등록하여 사용해야 한다.
+        include: refresh , health , beans, busrefresh ,httpexchanges , info , metrics , prometheus #httptrace 를 사용하려면 HttpExchangeRepository 객체를 bean 으로 등록하여 사용해야 한다.
