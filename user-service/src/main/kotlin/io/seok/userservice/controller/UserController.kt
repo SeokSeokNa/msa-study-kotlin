@@ -1,5 +1,7 @@
 package io.seok.userservice.controller
 
+import io.micrometer.core.annotation.Timed
+import io.micrometer.observation.annotation.Observed
 import io.seok.userservice.dto.UserDto
 import io.seok.userservice.service.UserService
 import io.seok.userservice.vo.Greeting
@@ -18,6 +20,7 @@ class UserController(
     private val userService: UserService
 ) {
 
+    @Timed(value = "users.status", longTask = true) //매트릭 중에 메소드의 실행시간을 수집하기 위한 어노테이션(value 에는 매트릭을 구별할 수 있는 이름을 넣으면된다 , 즉 이 메소드의 실행시간이 얼마나 걸렷는지 구별할 수 있는 고유값)
     @GetMapping("/health_check")
     fun status(): String {
         return "It's Working in User Service" +
@@ -26,7 +29,7 @@ class UserController(
                 ", token secret= ${env.getProperty("token.secret")}" +
                 ", token expiration time= ${env.getProperty("token.expiration_time")}"
     }
-
+    @Timed(value = "users.welcome", longTask = true)
     @GetMapping("/welcome")
     fun welcome(): String? {
         return greeting.message
