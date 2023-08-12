@@ -6,7 +6,8 @@ spring:
     name: user-service
 
   rabbitmq:
-    host: 127.0.0.1
+#    host: 127.0.0.1
+    host: rabbitmq-stream # docker container 사용시
     port: 5672
     username: admin
     password: admin
@@ -17,14 +18,16 @@ spring:
       #      name: config-server # configServer의 어플리케이션 name을 명시하게되면 application.yml 파일을 읽어오게함
       name: user-service
   config:
-    import: optional:configserver:http://localhost:8888
+#    import: optional:configserver:http://localhost:8888
+    import: optional:configserver:http://config-service:8888 # docker container 사용시
   #  profiles:
   #    active: dev #config-server에 있는 설정 파일을 profile별로 불러올 수 있다( 현재 설정으로는 ecommerce-dev.yml 파일을 불러오게된다.)
 
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/mydb
+#    url: jdbc:mariadb://localhost:3306/mydb
+    url: jdbc:mariadb://mariadb:3306/mydb # docker container 사용시
     username: root
     password: test1357
   jpa:
@@ -39,7 +42,8 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka # docker container 사용시
 
 greeting:
   message: Welcome to the Simple User-Service!
@@ -49,12 +53,14 @@ logging:
     io.seok.userservice.client: DEBUG
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  file: /api-logs/users-ws.log
 
 # actuator 설정
 management:
   zipkin:
     tracing:
-      endpoint: http://127.0.0.1:9411/api/v2/spans
+#      endpoint: http://127.0.0.1:9411/api/v2/spans
+      endpoint: http://zipkin:9411/api/v2/spans # docker container 사용시
   tracing:
     enabled: true
     sampling:
