@@ -4,7 +4,8 @@ server:
 encrypt:
   key-store:
 #    location: file:///${user.home}/apiEncryptionKey.jks
-    location: file://${user.home}/apiEncryptionKey.jks
+#    location: file://${user.home}/apiEncryptionKey.jks
+    location: file:/apiEncryptionKey.jks #docker 사용시 해당 프로젝트에 있는파일로 사용시
     password: test1234
     alias: apiEncryptionKey
 
@@ -12,18 +13,18 @@ spring:
   application:
     name: config-service
   rabbitmq:
-    host: 127.0.0.1
+    host: rabbitmq-stream # docker 컨테이너랑 연결시사용 (아닐때는 ip주소를 쓰면됌)
     port: 5672
     username: admin
     password: admin
-  profiles:
-    active: native #profile을 native로 설정했기에 밑에 git-uri 설정은 무시됨(만약 profile설정을 따로 안했다면 git에 정보를 디폴트로 읽게 되어있음)
+#  profiles:
+#    active: native #profile을 native로 설정했기에 밑에 git-uri 설정은 무시됨(만약 profile설정을 따로 안했다면 git에 정보를 디폴트로 읽게 되어있음)
   cloud:
     config:
       server:
-        native:
-#          search-locations: file:///${user.home}/native-local-repo #window
-          search-locations: file://${user.home}/native-local-repo #mac
+#        native:
+##          search-locations: file:///${user.home}/native-local-repo #window
+#          search-locations: file://${user.home}/native-local-repo #mac
         git:
           uri: https://github.com/SeokSeokNa/spring-cloud-config
 #          username: [github username] #username 과 password는 git repository가 private 일때만 사용
