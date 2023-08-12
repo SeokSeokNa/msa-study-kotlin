@@ -6,8 +6,10 @@ spring:
     name: discoveryservice
   cloud:
     config:
-      uri: http://127.0.0.1
-      name: seok-market
+#      uri: http://127.0.0.1
+#      name: seok-market #사용할 yaml 파일명
+      uri: http://config-service:8888 # 도커로 discovery service를 띄었을때 컨테이너끼리 통신하기위해 이렇게 설정
+      name: ecommerce
 
 
 ## discovery 서비스에 자기 자신은 등록하지 않기 위한 설정
