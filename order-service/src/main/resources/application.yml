@@ -6,14 +6,16 @@ spring:
     name: order-service
 
   rabbitmq:
-    host: 127.0.0.1
+#    host: 127.0.0.1
+    host: rabbitmq-stream # docker 사용시
     port: 5672
     username: admin
     password: admin
 
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://localhost:3306/mydb
+#    url: jdbc:mariadb://localhost:3306/mydb
+    url: jdbc:mariadb://mariadb:3306/mydb # docekr 사용시
     username: root
     password: test1357
   jpa:
@@ -28,18 +30,21 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     service-url:
-      defaultZone: http://localhost:8761/eureka
+#      defaultZone: http://localhost:8761/eureka
+      defaultZone: http://discovery-service:8761/eureka # docker 사용시
 
 logging:
   level:
     io.seok.orderservice: DEBUG # 로깅 레벨을 직접 조절하기 위해 사용
   pattern:
     level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  file: /api-logs/orders-ws.log
 
 management:
   zipkin:
     tracing:
-      endpoint: http://127.0.0.1:9411/api/v2/spans
+#      endpoint: http://127.0.0.1:9411/api/v2/spans
+      endpoint: http://zipkin:9411/api/v2/spans # docker 사용시
   tracing:
     enabled: true
     sampling:
